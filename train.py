@@ -45,6 +45,7 @@ from transformers import (
     Seq2SeqTrainer,
     Seq2SeqTrainingArguments,
     set_seed,
+    EarlyStoppingCallback
 )
 from transformers.trainer_utils import get_last_checkpoint
 from transformers.utils import check_min_version, is_offline_mode, send_example_telemetry
@@ -145,6 +146,11 @@ class DataTrainingArguments:
     dataset_config_name: Optional[str] = field(
         default=None, metadata={"help": "The configuration name of the dataset to use (via the datasets library)."}
     )
+    
+    patience: Optional[int] = field(
+        default=5, metadata={"help": "The configuration name of the dataset to use (via the datasets library)."}
+    )
+    
     text_column: Optional[str] = field(
         default="context",
         metadata={"help": "The name of the column in the datasets containing the full texts (for summarization)."},
@@ -685,6 +691,7 @@ def main():
         processing_class=tokenizer,
         data_collator=data_collator,
         compute_metrics=compute_metrics if training_args.predict_with_generate else None,
+        callbacks=[EarlyStoppingCallback(early_stopping_patience=data_args.patience)]
     )
 
     # Training
