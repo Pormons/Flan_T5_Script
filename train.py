@@ -152,7 +152,7 @@ class DataTrainingArguments:
     )
     
     text_column: Optional[str] = field(
-        default="context",
+        default="question",
         metadata={"help": "The name of the column in the datasets containing the full texts (for summarization)."},
     )
     summary_column: Optional[str] = field(
@@ -366,6 +366,7 @@ def main():
         "google-t5/t5-3b",
         "google-t5/t5-11b",
         "google/flan-t5-base",
+        "google/flan-t5-small",
     ]:
         logger.warning(
             "You're running a t5 model but didn't provide a source prefix, which is the expected, e.g. with "
